@@ -1,0 +1,29 @@
+version: '3'
+services:
+    backend:
+        build: ./backend
+        container_name: backend
+        # tty: true
+        volumes:
+            - ./backend/app:/go/src/app
+        ports:
+            - "8080:8080"
+    frontend:
+        build: ./frontend
+        container_name: frontend
+        tty: true
+        volumes:
+            - ./frontend/fullcalendar:/usr/src/app/fullcalendar
+        ports:
+            - "80:8080"
+    database:
+        build: ./database
+        container_name: database
+        volumes:
+            - ./database/mysql/initdb.d:/docker-entrypoint-initdb.d
+            - ./database/mysql/conf.d:/etc/mysql/conf.d
+            - ./database/mysql/mysql_data:/var/lib/mysql
+        ports:
+            - 3306:3306
+        links:
+            - backend
