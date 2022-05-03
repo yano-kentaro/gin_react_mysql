@@ -3,7 +3,7 @@ services:
     backend:
         build: ./backend
         container_name: backend
-        # tty: true
+        tty: true
         volumes:
             - ./backend/app:/go/src/app
         ports:
@@ -23,6 +23,12 @@ services:
             - ./database/mysql/initdb.d:/docker-entrypoint-initdb.d
             - ./database/mysql/conf.d:/etc/mysql/conf.d
             - ./database/mysql/mysql_data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            TZ: ${TZ}
         ports:
             - 3306:3306
         links:
