@@ -4,6 +4,8 @@ services:
         build: ./backend
         container_name: backend
         tty: true
+        env_file:
+            - ./backend/.env
         volumes:
             - ./backend/app:/go/src/app
         ports:
