@@ -10,6 +10,8 @@ RUN apt-get install -y --no-install-recommends \
 
 RUN mkdir /go/src/app
 WORKDIR /go/src/app
+RUN go get -u github.com/cosmtrek/air
+RUN go get -u github.com/go-delve/delve/cmd/dlv
+RUN go mod tidy
 
-CMD [ "go", "run", "main.go" ]
-EXPOSE 8080
+CMD ["air", "-c", ".air.toml"]**
