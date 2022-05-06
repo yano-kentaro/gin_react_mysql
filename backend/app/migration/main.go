@@ -27,6 +27,7 @@ import (
 
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/mysql"
+	"github.com/golang-migrate/migrate/source/file"
 	// "github.com/joho/godotenv"
 	// "github.com/pkg/errors"
 )
@@ -35,7 +36,7 @@ import (
 //                    グローバル変数
 //==========================================|2022_05_04
 
-var migrationFilePath = "file://./migrations/"
+var migrationFilePath = "file://migrations/"
 
 //===================================================|0
 //                    メイン処理
@@ -57,10 +58,7 @@ func main() {
 	//------------------------------
 	// マイグレーション情報取得
 	m := newMigrate()
-	version, dirty, err := m.Version()
-	if err != nil {
-		log.Fatalln(err)
-	}
+	version, dirty, _ := m.Version()
 	force := flag.Bool("f", false, "force execute fixed sql")
 	if dirty && *force {
 		fmt.Println("force=true: force execute current version sql")
@@ -108,10 +106,16 @@ func newMigrate() *migrate.Migrate {
 		log.Fatalln(err)
 	}
 
+	fileDriver, err := (&file.File{}).Open(migrationFilePath)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	//------------------------------
 	// DB作成
-	m, err := migrate.NewWithDatabaseInstance(
-		migrationFilePath,
+	m, err := migrate.NewWithInstance(
+		"file",
+		fileDriver,
 		driverName,
 		driver,
 	)

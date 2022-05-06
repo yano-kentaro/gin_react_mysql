@@ -45,15 +45,17 @@ func NewSQLHandler() *SQLHandler {
 	//------------------------------
 	// DB接続定義
 	dsn := GenerateDsn()
-	var db *SQLHandler
-	db.DB, db.Err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if db.Err != nil {
-		log.Fatalln(db.Err)
+	fmt.Println(dsn)
+	var db *gorm.DB
+	var err error
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatalln(err)
 	}
 
 	//------------------------------
 	// DB定義
-	sqlDB, err := db.DB.DB()
+	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -70,8 +72,8 @@ func NewSQLHandler() *SQLHandler {
 	//------------------------------
 	// SQLHandler新規作成
 	sqlHandler := new(SQLHandler)
-	db.DB.Logger.LogMode(4)
-	sqlHandler.DB = db.DB
+	db.Logger.LogMode(4)
+	sqlHandler.DB = db
 
 	return sqlHandler
 }
@@ -88,13 +90,13 @@ func GenerateDsn() (dsn string) {
 	host := os.Getenv("MYSQL_HOST")
 	port := os.Getenv("MYSQL_PORT")
 	dbName := os.Getenv("MYSQL_DATABASE")
-	tz := os.Getenv("TZ")
+	// tz := os.Getenv("TZ")
 
 	//------------------------------
 	// DB接続定義
 	dsn = fmt.Sprintf(
-		"%[1]s:%[2]s@tcp(%[3]s:%[4]s)/%[5]s?parseTime=true&loc=%[6]s",
-		user, password, host, port, dbName, tz,
+		"%[1]s:%[2]s@tcp(%[3]s:%[4]s)/%[5]s?parseTime=true",
+		user, password, host, port, dbName,
 	)
 
 	return dsn
