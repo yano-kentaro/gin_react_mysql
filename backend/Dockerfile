@@ -11,8 +11,11 @@ RUN apt-get install -y --no-install-recommends \
 RUN mkdir /go/src/app
 COPY ./app /go/src/app
 WORKDIR /go/src/app
-# RUN go get -u github.com/cosmtrek/air
-# RUN go get -u github.com/go-delve/delve/cmd/dlv
+
+RUN go get -u github.com/cosmtrek/air
+RUN go get -u github.com/go-delve/delve/cmd/dlv
+RUN go build -o /go/bin/air github.com/cosmtrek/air
+RUN go build -o /go/bin/dlv github.com/go-delve/delve/cmd/dlv
 RUN go mod tidy
 
-CMD ["go", "run", "main.go"]
+CMD ["air", "-c", ".air.toml"]**

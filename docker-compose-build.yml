@@ -1,0 +1,40 @@
+version: '3'
+services:
+    backend:
+        image: 993745280062.dkr.ecr.ap-northeast-1.amazonaws.com/backend:latest
+        build: ./backend
+        container_name: backend
+        tty: true
+        env_file:
+            - ./backend/.env
+        volumes:
+            - ./backend/app:/go/src/app
+        ports:
+            - "3000:3000"
+    frontend:
+        image: 993745280062.dkr.ecr.ap-northeast-1.amazonaws.com/frontend:latest
+        build: ./frontend
+        container_name: frontend
+        tty: true
+        volumes:
+            - ./frontend/fullcalendar:/usr/src/app/fullcalendar
+        ports:
+            - "80:80"
+    database:
+        image: 993745280062.dkr.ecr.ap-northeast-1.amazonaws.com/database:latest
+        build: ./database
+        container_name: database
+        volumes:
+            - ./database/mysql/initdb.d:/docker-entrypoint-initdb.d
+            - ./database/mysql/conf.d:/etc/mysql/conf.d
+            - ./database/mysql/mysql_data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: qwe123
+            MYSQL_DATABASE: fullcalendar
+            MYSQL_USER: user
+            MYSQL_PASSWORD: qwe123
+            TZ: Asia/Tokyo
+        ports:
+            - 3306:3306
+        links:
+            - backend
