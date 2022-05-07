@@ -43,7 +43,7 @@ func main() {
 	r := gin.Default() // r <- router
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
-			"http://localhost",
+			"http://frontend:80",
 		},
 		AllowMethods: []string{
 			"GET", "POST", "PUT", "DELETE", "OPTIONS",
@@ -63,10 +63,10 @@ func main() {
 	//------------------------------
 	// Events
 	events := events.New()
-	r.GET("/events", handler.GetEvents(events))
-	r.POST("/event/create", handler.CreateEvent(events))
-	r.PUT("/event/update/:id", handler.UpdateEvent(events))
-	r.DELETE("event/delete/:id", handler.DeleteEvent(events))
+	r.GET("/api/events", handler.GetEvents(events))
+	r.POST("/api/event/create", handler.CreateEvent(events))
+	r.PUT("/api/event/update/:id", handler.UpdateEvent(events))
+	r.DELETE("/api/event/delete/:id", handler.DeleteEvent(events))
 
 	//------------------------------
 	// APIサーバー起動
