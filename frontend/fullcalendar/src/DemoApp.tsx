@@ -38,7 +38,7 @@ export default class DemoApp extends React.Component<{}, DemoAppState> {
               right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }}
             events={{
-              url: "http://localhost:3000/events"
+              url: "/api/events"
             }}
             initialView='dayGridMonth'
             editable={true}
@@ -109,7 +109,7 @@ export default class DemoApp extends React.Component<{}, DemoAppState> {
     calendarApi.unselect() // clear date selection
 
     if(title) {
-      const res = await axios.post('http://localhost:3000/event/create', {
+      const res = await axios.post('/api/event/create', {
         title: title,
         start: selectInfo.startStr,
         end: selectInfo.endStr,
@@ -124,7 +124,7 @@ export default class DemoApp extends React.Component<{}, DemoAppState> {
   eventResize = async (resizeInfo: EventResizeDoneArg) => {
     let calendarApi = resizeInfo.view.calendar
     let newEvent = resizeInfo.event
-    const res = await axios.put('http://localhost:3000/event/update/' + newEvent.id, {
+    const res = await axios.put('/api/event/update/' + newEvent.id, {
       title: newEvent.title,
       start: newEvent.startStr,
       end: newEvent.endStr
@@ -136,7 +136,7 @@ export default class DemoApp extends React.Component<{}, DemoAppState> {
   eventDrop = async (dropInfo: EventDropArg) => {
     let calendarApi = dropInfo.view.calendar
     let newEvent = dropInfo.event
-    const res = await axios.put('http://localhost:3000/event/update/' + newEvent.id, {
+    const res = await axios.put('/api/event/update/' + newEvent.id, {
       title: newEvent.title,
       start: newEvent.startStr,
       end: newEvent.endStr
@@ -148,7 +148,7 @@ export default class DemoApp extends React.Component<{}, DemoAppState> {
   handleEventClick = async (clickInfo: EventClickArg) => {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       let calendarApi = clickInfo.view.calendar
-      const res = await axios.delete('http://localhost:3000/event/delete/' + clickInfo.event.id)
+      const res = await axios.delete('/api/event/delete/' + clickInfo.event.id)
       calendarApi.refetchEvents()
     }
   }

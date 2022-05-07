@@ -30,5 +30,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: packageMeta.title
     })
-  ]
+  ],
+  devServer: {
+    host: '0.0.0.0',
+    port: '80',
+    disableHostCheck: true,
+    proxy: {
+      '/api': {
+        target: 'http://backend:3000'
+      }
+    }
+  }
 }
